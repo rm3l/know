@@ -175,11 +175,11 @@ bintray {
 }
 compileKotlin {
     kotlinOptions {
-        jvmTarget = "1.7"
+        jvmTarget = "1.6"
     }
 }
 compileTestKotlin {
     kotlinOptions {
-        jvmTarget = "1.7"
+        jvmTarget = "1.6"
     }
 }
