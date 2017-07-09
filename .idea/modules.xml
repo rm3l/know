@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/know.iml" filepath="$PROJECT_DIR$/know.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/know_integrationTest.iml" filepath="$PROJECT_DIR$/.idea/modules/know_integrationTest.iml" group="know" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/know_main.iml" filepath="$PROJECT_DIR$/.idea/modules/know_main.iml" group="know" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/know_test.iml" filepath="$PROJECT_DIR$/.idea/modules/know_test.iml" group="know" />
+    </modules>
+  </component>
+</project>

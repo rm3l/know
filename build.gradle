@@ -1,0 +1,185 @@
+//Copyright (c) 2017 Armel Soro
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy
+//of this software and associated documentation files (the "Software"), to deal
+//in the Software without restriction, including without limitation the rights
+//to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//copies of the Software, and to permit persons to whom the Software is
+//furnished to do so, subject to the following conditions:
+//The above copyright notice and this permission notice shall be included in all
+//copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//SOFTWARE.
+
+final homePath = System.properties['user.home']
+
+group 'org.rm3l'
+version '1.0-SNAPSHOT'
+description 'Unofficial Kotlin client for the Now API'
+
+buildscript {
+    ext.kotlin_version = '1.1.3-2'
+    ext.dokka_version = '0.9.15'
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: 'org.jetbrains.dokka'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+
+targetCompatibility = 1.7
+sourceCompatibility = 1.7
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integration-test/java')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+}
+
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    compile 'org.jetbrains:annotations:15.0'
+
+    compile 'com.google.code.gson:gson:2.8.1'
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+}
+
+dokka {
+    outputFormat = 'html'
+    outputDirectory = "$buildDir/javadoc"
+}
+
+task integrationTest(type: Test) {
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen { false }
+}
+
+/*
+ * Ensure that the HTML reports of unit and integration tests are
+ * created to different report directories
+ */
+tasks.withType(Test) {
+    reports.html.destination = file("${reporting.baseDir}/${name}")
+}
+
+/*
+ * Ensure that integration tests are run before the check task
+ * and that the check task fails the build if there are failing integration tests.
+ */
+check.dependsOn integrationTest
+
+/*
+ * Ensure that unit tests are run before integration tests.
+ * This guarantees that unit tests are run even if integration tests fails.
+ */
+integrationTest.mustRunAfter test
+
+task generateSourcesJar(type: Jar) {
+    classifier 'sources'
+}
+
+task generateJavadocs(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    outputFormat = 'javadoc'
+    outputDirectory = "$buildDir/javadoc"
+}
+
+task generateJavadocsJar(type: Jar) {
+    from "$buildDir/javadoc"
+    classifier 'javadoc'
+}
+
+generateJavadocsJar.dependsOn generateJavadocs
+
+artifacts {
+    archives generateJavadocsJar
+    archives generateSourcesJar
+}
+
+bintray {
+
+    //Attempt to read properties file for deployment on Bintray, if any
+    final propsFile = new File(homePath.toString(), ".bintray.properties")
+
+    if (propsFile.exists()) {
+        printf("[Bintray] Using properties file located at " + propsFile.absolutePath)
+        final props = new Properties()
+        props.load(new FileInputStream(propsFile))
+        user = props['user']
+        key = props['key']
+    } else {
+        user = ""
+        key = ""
+    }
+
+    publish = true //If version should be auto published after an upload
+
+    pkg {
+        repo = 'maven'
+        name = 'org.rm3l:know'
+        labels = ['now', 'kotlin', 'library']
+
+        //noinspection GroovyAssignabilityCheck
+        version {
+            name = '1.0-SNAPSHOT'
+            desc = 'Unofficial Kotlin client for the Now API'
+            released = new Date()
+            vcsTag = '1.0-SNAPSHOT'
+        }
+
+        publicDownloadNumbers = true
+
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/rm3l/know.git'
+        websiteUrl = 'https://github.com/rm3l/know'
+        issueTrackerUrl = 'https://github.com/rm3l/know/issues'
+
+    }
+    configurations = ['archives']
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
