@@ -802,7 +802,7 @@ interface Now {
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
     @Throws(IOException::class)
-    fun getSecrets: List<Secret>
+    fun getSecrets(): List<Secret>
 
     /**
      * Returns a list with all secrets, asynchronously
