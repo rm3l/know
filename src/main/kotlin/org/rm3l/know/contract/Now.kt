@@ -282,7 +282,8 @@ interface Now {
      * *
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
-    val domains: List<Domain>
+    @Throws(IOException::class)
+    fun getDomains(): List<Domain>
 
     /**
      * Returns a list with all domain names and related aliases, asynchronously
@@ -667,7 +668,8 @@ interface Now {
      * *
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
-    val aliases: List<Alias>
+    @Throws(IOException::class)
+    fun getAliases(): List<Alias>
 
     /**
      * Gets all aliases, asynchronously
@@ -799,7 +801,8 @@ interface Now {
      * *
      * @throws UnsuccessfulResponseException if response code got from the server was not successful
      */
-    val secrets: List<Secret>
+    @Throws(IOException::class)
+    fun getSecrets: List<Secret>
 
     /**
      * Returns a list with all secrets, asynchronously
