@@ -336,9 +336,9 @@ open class NowClient : Now {
                 })
     }
 
-    override val domains: List<Domain>
-        @Throws(IOException::class)
-        get() {
+    @Throws(IOException::class)
+    override fun getDomains(): List<Domain>
+        {
             val response = this.nowService!!.getDomains().execute()
             if (!response.isSuccessful) {
                 throw UnsuccessfulResponseException(response.code(), response.message())
@@ -668,9 +668,9 @@ open class NowClient : Now {
                 })
     }
 
-    override val aliases: List<Alias>
-        @Throws(IOException::class)
-        get() {
+    @Throws(IOException::class)
+    override fun getAliases(): List<Alias>
+        {
             val response = this.nowService!!.getAliases().execute()
             if (!response.isSuccessful) {
                 throw UnsuccessfulResponseException(response.code(), response.message())
@@ -782,9 +782,9 @@ open class NowClient : Now {
                 })
     }
 
-    override val secrets: List<Secret>
-        @Throws(IOException::class)
-        get() {
+    @Throws(IOException::class)
+    override fun getSecrets(): List<Secret>
+        {
             val response = this.nowService!!.getSecrets().execute()
             if (!response.isSuccessful) {
                 throw UnsuccessfulResponseException(response.code(), response.message())
