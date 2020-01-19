@@ -20,7 +20,8 @@
 #  SOFTWARE.
 #
 #
-
+dist: trusty
+#sudo: required
 language: java
 
 jdk:
