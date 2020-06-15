@@ -25,7 +25,7 @@ description 'Unofficial Kotlin client for the Now API'
 
 buildscript {
     ext.kotlin_version = '1.2.71'
-    ext.dokka_version = '0.9.15'
+    ext.dokka_version = '0.10.1'
     repositories {
         jcenter()
         mavenCentral()
