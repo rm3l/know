@@ -74,7 +74,7 @@ dependencies {
 
     compile 'org.jetbrains:annotations:22.0.0'
 
-    compile 'com.google.code.gson:gson:2.8.7'
+    compile 'com.google.code.gson:gson:2.8.8'
     compile 'com.squareup.retrofit2:retrofit:2.9.0'
     compile 'com.squareup.retrofit2:converter-gson:2.9.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
